@@ -1,0 +1,12 @@
+Source: nx-misc-utils
+Section: misc
+Priority: extra
+Maintainer: metalglue <metalglue@gmail.com>
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.8.4
+
+Package: nx-misc-utils
+Architecture: all
+Depends: ${misc:Depends}, perl
+Description: nx misc utils
+ nx misc utils
