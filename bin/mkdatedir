@@ -1,0 +1,55 @@
+#!/usr/bin/env perl
+# vim: set noet ts=4 sw=4 sts=4 :
+
+# This command (mkdatedir) makes a new directory named after current time at the current directory.
+# The name of the new directory has the prefix calculated automatically.
+
+use Time::localtime;
+
+# collect the current prefix list
+my @glob_dirs = glob '*-*/';
+my @dirs = ();
+for my $a (@glob_dirs) {
+	if ($a =~ /^([a-zA-Z]{2})-/) {
+		push @dirs, $1;
+	}
+}
+
+# calc the next prefix
+# if the directory has directories and has no 'aa-' prefixed directories,
+# the next prefix is empty for compatibility
+my $next = 'aa-';
+if ($#glob_dirs >= 0){
+	if ($#dirs >= 0) {
+		my $the_last = (reverse sort @dirs)[0];
+		my @the_last_chars = split //, $the_last;
+		if ($the_last_chars[1] ne 'z') {
+			$the_last_chars[1] = chr(ord($the_last_chars[1]) + 1);
+		}else{
+			$the_last_chars[0] = chr(ord($the_last_chars[0]) + 1);
+			$the_last_chars[1] = 'a';
+		}
+		$next = join('', @the_last_chars) . '-';
+	}else{
+		$next = '';
+	}
+}
+
+# calc the new name of the directory
+my $tm = localtime;
+if ($next ne '') {
+	$new_dir = sprintf '%s%d-%02d%02d',
+					   $next, $tm->year + 1900, $tm->mon + 1, $tm->mday;
+}else{
+	$new_dir = sprintf '%d-%02d%02d-%02d%02d%02d',
+					   $tm->year + 1900, $tm->mon + 1, $tm->mday,
+					   $tm->hour, $tm->min, $tm->sec, "\n";
+}
+if ($#ARGV >= 0) {
+	$new_dir .= '-' . join('-', @ARGV);
+}
+mkdir $new_dir || die;
+
+# return the name the directory
+print $new_dir;
+
