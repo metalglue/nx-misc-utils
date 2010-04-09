@@ -42,7 +42,7 @@ echo "/=`pwd` {"
 find . -type d | grep -v '/\.' | sort | while read dir; do
 	dir="${dir#./}"
 	pushd "$dir" > /dev/null
-	find . -maxdepth 1 -type f >| "$files"
+	find . -maxdepth 1 -type f | sort >| "$files"
 	n=`cat "$files" | wc -l`
 	if [ $n -ne 0 ]; then
 		if [ "$dir" != "." ]; then
