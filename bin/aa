@@ -1,0 +1,4 @@
+#!/usr/bin/env perl
+
+print chr(0x61 + int(rand(26))), chr(0x61 + int(rand(26))), "\n";
+

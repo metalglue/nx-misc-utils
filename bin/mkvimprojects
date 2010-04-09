@@ -1,0 +1,68 @@
+#!/bin/bash
+
+stack=()
+
+dirlabel () {
+	local dir="$1" n="$2"
+	local depth=${#stack[@]}
+	if [ $depth -eq 0 ]; then
+		dirlabel_r="$dir"
+	else
+		while true; do
+			local path="${stack[$((depth - 1))]}"
+			local t="${dir#$path/}"
+			if [ "$t" != "$dir" ]; then
+				local i
+				dirlabel_r=''
+				for ((i=0;i<depth-1;i++)); do
+					dirlabel_r="$dirlabel_r| "
+				done
+				dirlabel_r="$dirlabel_r| $t"
+				break
+			else
+				unset stack[$((--depth))]
+				if [ $depth -eq 0 ]; then
+					dirlabel_r="$dir"
+					break
+				fi
+			fi
+		done
+	fi
+	dirlabel_r="$dirlabel_r ($n)"
+	stack[${#stack[@]}]="$dir"
+}
+
+root="${1:-.}"
+
+cd "$root"
+
+{
+files="`mktemp -t mkvimprojectsXXXX`"
+echo "/=`pwd` {"
+find . -type d | grep -v '/\.' | sort | while read dir; do
+	dir="${dir#./}"
+	pushd "$dir" > /dev/null
+	find . -maxdepth 1 -type f >| "$files"
+	n=`cat "$files" | wc -l`
+	if [ $n -ne 0 ]; then
+		if [ "$dir" != "." ]; then
+			dirlabel "$dir" $n
+			echo "$dirlabel_r=$dir {"
+		fi
+		while read file; do
+			file=${file#./}
+			echo "  $file"
+		done < "$files"
+		if [ "$dir" != "." ]; then
+			echo "}"
+		fi
+	fi
+	popd > /dev/null
+done
+echo "}"
+echo ""
+echo "# vim: set fdl=1 :"
+} >| ~/.vimprojects
+
+rm -f "$files"
+
