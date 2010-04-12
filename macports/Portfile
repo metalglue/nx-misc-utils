@@ -1,0 +1,15 @@
+# vim: set ft=tcl et sw=4 ts=4 sts=4 :
+PortSystem          1.0
+name                nx-misc-utils
+version             0.0.1
+categories          sysutils
+maintainers         metalglue@gmail.com
+description         nx-misc-utils
+long_description    nx-misc-utils
+master_sites        http://blaise.pinklattice.com/macports/distfiles/
+checksums           md5     ffd6e206a7dfa0781882688ab2548c61 \
+                    sha1    92d922892f2c27423e5e6e50109a4810af47f00b \
+                    rmd160  fc744b172f1aebf02ec15ae1fde5bf0c036a40de
+use_configure       no
+build.args          PREFIX=${prefix}
+destroot.args       PREFIX=${prefix}
