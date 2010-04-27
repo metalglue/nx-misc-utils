@@ -1,3 +1,9 @@
+nx-misc-utils (0.0.2-1) unstable; urgency=low
+
+  * LC_ALL=C sort
+
+ -- metalglue <metalglue@gmail.com>  Tue, 27 Apr 2010 18:20:40 +0900
+
 nx-misc-utils (0.0.1-1) unstable; urgency=low
 
   * Initial Release.
